@@ -22,27 +22,12 @@ public class SuperParServer {
 	}
 
 	public void start() {
-		ServerSocket srv;
-		try {
-			srv = new ServerSocket(puertoTransferencias);
-		} catch (IOException e) {
-			System.out.println("No se pudo abrir el socket");
-			e.printStackTrace();
-			return;
-		}
-
-		Socket client;
 		System.out.println("Atendiendo peticiones");
-		while(true)
-		{
-			try {
-				client = srv.accept();
-				//debe regresar lo antes posible para poder atender mas peticiones
-				rodrigo.atenderPeticion(client);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		
+		//debe regresar lo antes posible para poder atender mas peticiones
+		rodrigo.atenderPeticion();
+			
+		
 	}
 
 }
