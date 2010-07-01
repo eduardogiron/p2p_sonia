@@ -96,7 +96,7 @@ public class RodrigoSuperParDummy {
 	 private void beginSearch(){
              try {
        		String nombre=System.getProperty("user.name");
-      		String line = clientInput_.readLine();
+      		String line =null;
       		
                  
       		if((line = clientInput_.readLine()) != null) {
@@ -113,6 +113,14 @@ public class RodrigoSuperParDummy {
                          System.out.println(" file is not here, lookup further...");
                          //boolean found = lookupFurther(level-1, line, clientOutput_);
                         }*/
+                        else{
+                            bellman.restart();
+                            String nextIp=bellman.nextNode();
+                            while(nextIp!=null){
+                                 System.out.println(" file is not here, lookup further...");
+                                 boolean found = lookupFurther(nextIp, clientOutput_);
+                            }
+                        }
                 }  
 
                 clientInput_.close();
@@ -122,17 +130,40 @@ public class RodrigoSuperParDummy {
          } 
 	      
 	      
-	      
+      private  boolean lookupFurther(String fname, OutputStream out) throws IOException {
+       Hashtable<String, Integer> conexiones=new Hashtable<String,Integer>();
+       conexiones.put("127.0.0.1", 6);
+       ShortestPath bellman=new ShortestPath(conexiones);
+
+        String ip=bellman.nextNode();
+        boolean found = false;
+        while(! found && ip!= null) {
+          System.out.println("trying server " + ip);
+          try {
+            Socket s = new Socket(ip, 1234);
+            PrintWriter srv = new PrintWriter(s.getOutputStream(), true);
+            srv.println(fname);
+            found=archivos.isLocal(fname);
+            s.close();
+          }catch(ConnectException e) { }
+        }
+        
+        return found;
+      }
 	      
 	      
 	
 	
 	}
+
+
+
+
 	
 	public static void main(String args[]){
 	    ArchivosLocales archivos=new ArchivosLocales();
 	    Hashtable<String, Integer> conexiones=new Hashtable<String,Integer>();
-            conexiones.put("192.168.100.165", 6);
+            conexiones.put("127.0.0.1", 6);
             RodrigoSuperParDummy superParDummy=new RodrigoSuperParDummy(archivos,conexiones);
 	    superParDummy.atenderPeticion();
 	}
