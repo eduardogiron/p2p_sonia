@@ -4,7 +4,7 @@ import mx.cinvestav.p2p.fileListSincro.GironSuperParDummy;
 import mx.cinvestav.p2p.utils.ServersListHandler;
 
 public class SuperPar {
-	private static final int puertoListasArchivos = 1234;
+	private static final int puertoListasArchivos = 1232;
 
 	public static void main(String[] args) {
 		GironSuperParDummy giron;
