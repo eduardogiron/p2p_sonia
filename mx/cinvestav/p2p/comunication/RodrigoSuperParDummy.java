@@ -8,6 +8,8 @@ import java.util.logging.Logger;
 
 import mx.cinvestav.p2p.bellamFord.ShortestPath;
 import mx.cinvestav.p2p.fileListSincro.ArchivosLocales;
+import mx.cinvestav.p2p.fileTransfer.FileTransferer;
+import mx.cinvestav.p2p.fileTransfer.ServerTransferer;
 
 public class RodrigoSuperParDummy {
 
@@ -97,6 +99,7 @@ public class RodrigoSuperParDummy {
              try {
        		String nombre=System.getProperty("user.name");
       		String line =null;
+                FileTransferer transferer=new FileTransferer();
       		
                  
       		if((line = clientInput_.readLine()) != null) {
@@ -104,8 +107,9 @@ public class RodrigoSuperParDummy {
         		System.out.print("Client "+nombre+ "/" +socket.getInetAddress().getHostName()+ " request for file " + line + "...");
                         if(archivos.isLocal(f.toString())) {
                                 PrintWriter srv = new PrintWriter(clientOutput_ , true);
-          			srv.println("Archivo encontrado en: "+socket.getLocalSocketAddress());
+          			srv.println("true");
           			//ServerTransferer srv=new ServerTransferer();
+                                transferer.copyStream(socket.getInputStream(), clientOutput_);
           			
           
         		}
@@ -118,7 +122,7 @@ public class RodrigoSuperParDummy {
                             String nextIp=bellman.nextNode();
                             while(nextIp!=null){
                                  System.out.println(" file is not here, lookup further...");
-                                 boolean found = lookupFurther(nextIp, clientOutput_);
+                                 lookupFurther(f.toString(), clientOutput_,nextIp);
                             }
                         }
                 }  
@@ -130,25 +134,28 @@ public class RodrigoSuperParDummy {
          } 
 	      
 	      
-      private  boolean lookupFurther(String fname, OutputStream out) throws IOException {
+      private  void lookupFurther(String fname, OutputStream out,String nextIp) throws IOException {
        Hashtable<String, Integer> conexiones=new Hashtable<String,Integer>();
-       conexiones.put("127.0.0.1", 6);
-       ShortestPath bellman=new ShortestPath(conexiones);
-
-        String ip=bellman.nextNode();
-        boolean found = false;
-        while(! found && ip!= null) {
-          System.out.println("trying server " + ip);
+       BufferedReader br=null;
+       FileTransferer transferer=new FileTransferer();
+       
+        while(nextIp!= null) {
+          System.out.println("trying server " + nextIp);
           try {
-            Socket s = new Socket(ip, 1234);
+            Socket s = new Socket(nextIp, 1234);
+            br=new BufferedReader(new InputStreamReader(s.getInputStream()));
             PrintWriter srv = new PrintWriter(s.getOutputStream(), true);
             srv.println(fname);
-            found=archivos.isLocal(fname);
+            if(br.readLine().equals("true")){
+                srv.println("true");
+                transferer.copyStream(s.getInputStream(), out);
+                break;
+            }
             s.close();
           }catch(ConnectException e) { }
         }
         
-        return found;
+        
       }
 	      
 	      

@@ -24,16 +24,14 @@ public class RodrigoParSimpleDummy {
                 
                  Socket s = new Socket(ip, 1234);
                  PrintWriter srv = new PrintWriter(s.getOutputStream(), true);
-                 System.out.println(3 + "\n" + file);
-                 srv.println(file);
+                srv.println(file);
 
       
                  BufferedReader br=new BufferedReader(new InputStreamReader(s.getInputStream()));
                  //System.out.println("buffer: "+br.readLine());
     
-                 if(br.readLine()!=null){
-                    System.out.println("entra");
-                    return true;
+                 if(br.readLine().equals("true")){
+                     return true;
          
                   }  
                 }            
