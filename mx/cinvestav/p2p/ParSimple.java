@@ -38,7 +38,7 @@ public class ParSimple {
 
 		lineOfText = new BufferedReader(new InputStreamReader(System.in));
 		String textLine;
-		RodrigoParSimpleDummy rodrigo = new RodrigoParSimpleDummy();
+		RodrigoParSimpleDummy rodrigo = new RodrigoParSimpleDummy(ipSuperPar);
 		InputStream clientInput = null;
 		// Se repite hasta que se escriba 'exit', cada cadena entrada se buscara
 		// en la red
