@@ -2,8 +2,9 @@ package mx.cinvestav.p2p.bellamFord;
 
 import java.net.*;
 import java.io.*;
+import java.util.Hashtable;
 
-public class RodrigoServer {
+public class RodrigoServer implements Runnable{
 
 
         private GironVectores giron;
@@ -19,7 +20,7 @@ public class RodrigoServer {
         public RodrigoServer(){
         }
 	
-	public void serve(){
+	public void run(){
 	   try{
 	      serverSocket=new ServerSocket(PORT);
 	      	   
@@ -55,7 +56,7 @@ public class RodrigoServer {
                    ois = new ObjectInputStream(is);
                    vectors= (GironVectores) ois.readObject(); 
                    String ip=socket.getLocalSocketAddress().toString();
-                   vectors.setIp(ip);
+                   //vectors.setIp(ip);
                 }catch(UnknownHostException e){
                      e.printStackTrace();
                 }catch(IOException ioe){
@@ -80,8 +81,21 @@ public class RodrigoServer {
 	
 	
 	public static void main(String args[]){
-	    RodrigoServer rockServer=new RodrigoServer();          
-	    rockServer.serve(); 
+	    //RodrigoServer rockServer=new RodrigoServer();
+	    //rockServer.serve();
+
+
+                GironVectores giron;
+		RodrigoServer rodrigo;
+		ClienteBellman clienteBell;
+                Hashtable<String, Integer> conexiones=new Hashtable<String,Integer>();
+		conexiones.put("127.0.0.1", 8);
+		giron = new GironVectores(conexiones);
+		clienteBell = new ClienteBellman(giron);
+		rodrigo = new RodrigoServer(giron, clienteBell);
+
+		Thread t = new Thread(rodrigo);
+		t.start();
 	}
 
 }
