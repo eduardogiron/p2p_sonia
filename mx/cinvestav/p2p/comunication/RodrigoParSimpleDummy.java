@@ -6,21 +6,26 @@ import java.io.*;
 
 public class RodrigoParSimpleDummy {
 
+    private String ip;
+
+
+    public RodrigoParSimpleDummy(String ip){
+        this.ip=ip;
+    }
+
 /**
  * Este metodo debe regresar true si se encontro el archivo false en los demas casos
  * */
 	public boolean solicitar(String file) {
-              String ip;
-              boolean found = false;
-              BufferedReader hosts=null;
+             
+             
               try{
-                 hosts = new BufferedReader(new FileReader("servers.list"));
-                 while(! found && (ip = hosts.readLine()) != null) {
-
+                 
+                
                  Socket s = new Socket(ip, 1234);
                  PrintWriter srv = new PrintWriter(s.getOutputStream(), true);
-
-                 srv.println(3 + "\n" + file);
+                 System.out.println(3 + "\n" + file);
+                 srv.println(file);
 
       
                  BufferedReader br=new BufferedReader(new InputStreamReader(s.getInputStream()));
@@ -28,27 +33,26 @@ public class RodrigoParSimpleDummy {
     
                  if(br.readLine()!=null){
                     System.out.println("entra");
-                    hosts.close();
                     return true;
          
                   }  
-                }
+                }            
                
-               //return false;
-              }catch(ConnectException ce){
+              catch(ConnectException ce){
                     System.out.println("Could not connect: ");
                     ce.printStackTrace();
               }catch(IOException ioe){
                   ioe.printStackTrace();  
-              }finally{
-                 try{
-                 hosts.close();
-                 }catch(IOException ioe){
-                     ioe.printStackTrace();  
-                 }   
-              } 
-              return false;		
+              }
+              return false;
 		
+	}
+	
+	
+	public static void main(String args[]){
+	    RodrigoParSimpleDummy simpleDummy=new RodrigoParSimpleDummy("127.0.0.1");
+	    System.out.println(simpleDummy.solicitar("servers.lst"));
+	  
 	}
 
 }
