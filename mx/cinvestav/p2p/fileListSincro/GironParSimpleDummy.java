@@ -8,6 +8,7 @@ import java.io.*;
  * mandarlos al server encontrado en el archivo 'servers.list'
  */
 public class GironParSimpleDummy {
+	private static final int puertoListasArchivos = 1232;
 	Socket s;
 	String ip;
 
@@ -42,7 +43,7 @@ public class GironParSimpleDummy {
 		ip = ipSuperPar;
 		
 		try {
-			s = new Socket(ipSuperPar, 1232);
+			s = new Socket(ipSuperPar, puertoListasArchivos);
 			srv = new PrintWriter(s.getOutputStream(), true);
 		} catch (IOException e) {
 			System.err.println("Error de E/S para la conexion con: "
