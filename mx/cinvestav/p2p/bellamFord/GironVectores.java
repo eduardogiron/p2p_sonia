@@ -136,4 +136,41 @@ public class GironVectores implements Serializable {
         actual= (Hashtable)in.readObject();
         in.close();
     }
+    
+      @Override
+    public boolean equals(Object o){
+        if ((o instanceof GironVectores) && (((GironVectores)o).getActual()== this.actual)
+                &&  (((GironVectores)o).getTabla_externa()== this.tabla_externa)
+                && (((GironVectores)o).getTabla_propia()== this.tabla_propia) ) {
+            return true;
+          } else {
+            return false;
+          }
+
+        
+    }
+
+    /**
+     * @return the actual
+     */
+    public Hashtable<String, Integer> getActual() {
+        return actual;
+    }
+
+    /**
+     * @return the tabla_propia
+     */
+    public Hashtable<String, ArrayList> getTabla_propia() {
+        return tabla_propia;
+    }
+
+    /**
+     * @return the tabla_externa
+     */
+    public Hashtable<String, ArrayList> getTabla_externa() {
+        return tabla_externa;
+    }
+    
+    
+    
 }
