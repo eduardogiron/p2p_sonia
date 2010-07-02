@@ -2,6 +2,7 @@ package mx.cinvestav.p2p.bellamFord;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class RodrigoServer implements Runnable{
@@ -23,7 +24,7 @@ public class RodrigoServer implements Runnable{
 	public void run(){
 	   try{
 	      serverSocket=new ServerSocket(PORT);
-	      	   
+	      clienteBell.mandarVectorAVecinos(PORT);
 	   }catch(IOException ioe){
 	        ioe.printStackTrace();
 	   }
@@ -52,9 +53,10 @@ public class RodrigoServer implements Runnable{
                GironVectores vectors=null;
                ObjectInputStream ois=null;
                try{
+                   vectors= new GironVectores();
                    InputStream is = socket.getInputStream(); 
                    ois = new ObjectInputStream(is);
-                   vectors= (GironVectores) ois.readObject(); 
+                   vectors.tabla_propia = (Hashtable<String, ArrayList>) ois.readObject();
                    String ip=socket.getLocalSocketAddress().toString();
                    //vectors.setIp(ip);
                 }catch(UnknownHostException e){
@@ -64,11 +66,7 @@ public class RodrigoServer implements Runnable{
                 }catch(ClassNotFoundException cnfe) {
                     cnfe.printStackTrace();
                 }finally{
-                   try{ 
-                      ois.close();
-                   }catch(IOException ioe){
-                       ioe.printStackTrace();
-                   }    
+
                 }
                 if(giron.cambiovector(vectors)){
                        clienteBell.mandarVectorAVecinos(PORT);

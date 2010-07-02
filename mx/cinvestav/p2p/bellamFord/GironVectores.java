@@ -18,7 +18,10 @@ public class GironVectores implements Serializable {
         this.tabla_externa = new Hashtable();
         this.initTable();
     }
-    @SuppressWarnings("unchecked")
+    public GironVectores() {
+		// TODO Auto-generated constructor stub
+	}
+	@SuppressWarnings("unchecked")
     public void initTable(){
         String ip_nodo;
         Enumeration key;
