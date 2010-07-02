@@ -9,7 +9,8 @@ public class GironVectores implements Serializable {
     public Hashtable<String, ArrayList> tabla_propia, tabla_externa;
     // Array List:  Destino Next Peso
     private ArrayList nodo,propio,foraneo,aux,aux2;
-    public String ip_nodo="";
+    public String ip_nodo="",ip_nodof="";
+	public int flag=0;
     @SuppressWarnings("unchecked")
     public GironVectores(Hashtable<String, Integer> conexiones) {
         // TODO Auto-generated constructor stub
@@ -45,8 +46,9 @@ public class GironVectores implements Serializable {
     }
     public boolean cambiovector(GironVectores conexiones)
     {
-        if (tabla_propia.equals(conexiones.tabla_propia)==false){
-			this.tabla_externa= conexiones.tabla_propia;  
+        if ((tabla_propia.equals(conexiones.tabla_propia)==false)&& (this.flag==0)){
+			this.tabla_externa= conexiones.tabla_propia;
+			this.ip_nodof= conexiones.ip_nodo;
 			this.actualizar();
             return false;
         }
@@ -95,6 +97,7 @@ public class GironVectores implements Serializable {
 						aux2.add((String)aux.get(0)); 
 						aux2.add((Integer)(((Integer)aux.get(1))+((Integer)foraneo.get(1)))); 
 						tabla_propia.put(k1,aux2);
+						this.flag=1;
                     }
 					propio.clear();
 					foraneo.clear();
@@ -105,9 +108,16 @@ public class GironVectores implements Serializable {
             }
             if(flag==false)
             {
-                System.out.println("Existe un nuevo nodo:");
-                tabla_propia.put(k2,tabla_externa.get(k2)); 
-                System.out.println("Valor añadido : "+k2+ " "+ tabla_externa.get(k2));
+				if(k2.equals(this.ip_nodo)==false)
+				{
+					ArrayList a_ux= new ArrayList();
+					System.out.println("Existe un nuevo nodo:");
+					a_ux.add((String) this.ip_nodof);
+					a_ux.add((Integer)tabla_externa.get(k2).get(1));
+					tabla_propia.put(k2,a_ux); 
+					System.out.println("Valor añadido : "+k2+ " "+ a_ux);
+					this.flag=1;
+				}
             }
         }
         
