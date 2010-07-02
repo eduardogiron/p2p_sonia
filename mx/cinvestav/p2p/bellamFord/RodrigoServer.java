@@ -52,13 +52,18 @@ public class RodrigoServer implements Runnable{
             public void run(){
                GironVectores vectors=null;
                ObjectInputStream ois=null;
+               String ip;
                try{
                    vectors= new GironVectores();
                    InputStream is = socket.getInputStream(); 
                    ois = new ObjectInputStream(is);
                    vectors.tabla_propia = (Hashtable<String, ArrayList>) ois.readObject();
-                   String ip=socket.getLocalSocketAddress().toString();
-                   giron.setIP(serverSocket.getLocalSocketAddress().toString());
+                   ip = socket.getInetAddress().toString();
+                   System.out.println("d:ip llegante:"+ip);
+                   vectors.setIP(ip);
+                   ip=socket.getLocalSocketAddress().toString();
+                   System.out.println("d:ip propia:"+ip);
+                   giron.setIP(ip);
                    //vectors.setIp(ip);
                 }catch(UnknownHostException e){
                      e.printStackTrace();
