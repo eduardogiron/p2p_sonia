@@ -58,6 +58,7 @@ public class RodrigoServer implements Runnable{
                    ois = new ObjectInputStream(is);
                    vectors.tabla_propia = (Hashtable<String, ArrayList>) ois.readObject();
                    String ip=socket.getLocalSocketAddress().toString();
+                   giron.setIP(serverSocket.getLocalSocketAddress().toString());
                    //vectors.setIp(ip);
                 }catch(UnknownHostException e){
                      e.printStackTrace();
@@ -78,23 +79,7 @@ public class RodrigoServer implements Runnable{
 }
 	
 	
-	public static void main(String args[]){
-	    //RodrigoServer rockServer=new RodrigoServer();
-	    //rockServer.serve();
-
-
-                GironVectores giron;
-		RodrigoServer rodrigo;
-		ClienteBellman clienteBell;
-                Hashtable<String, Integer> conexiones=new Hashtable<String,Integer>();
-		conexiones.put("127.0.0.1", 8);
-		giron = new GironVectores(conexiones);
-		clienteBell = new ClienteBellman(giron);
-		rodrigo = new RodrigoServer(giron, clienteBell);
-
-		Thread t = new Thread(rodrigo);
-		t.start();
-	}
+	
 
 }
 
