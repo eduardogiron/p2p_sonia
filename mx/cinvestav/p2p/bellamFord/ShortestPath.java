@@ -55,16 +55,17 @@ public class ShortestPath {
 	/**
 	 * Reinicia la secuencia de caminos a seguir
 	 */
-	public void restart() {
+	public void restart(String ipPropia) {
 		TreeMap<Integer, String> tablaCaminos = new TreeMap<Integer, String>();
-		Set<String> llaves = giron.tabla_propia.keySet();
-		ArrayList<Object> lista;
+		Set<String> llaves = giron.actual.keySet();
+		Integer lista;
 		String ant = "";
 
 		for (String siguiente : llaves) {
-			if (!ant.equals(siguiente)) {
-				lista = giron.tabla_propia.get(siguiente);
-				tablaCaminos.put((Integer) lista.get(1), (String) lista.get(0));
+			if (!tablaCaminos.containsValue(siguiente)) {
+				lista = giron.actual.get(siguiente);
+				if(!siguiente.equals(ipPropia))
+					tablaCaminos.put( lista, siguiente);
 			}
 			ant = siguiente;
 		}
