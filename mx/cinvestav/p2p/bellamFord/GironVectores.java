@@ -54,12 +54,14 @@ public class GironVectores implements Serializable {
 		if(this.flag==0){
             return false;
         }
-        else
-            return true;
+        else{
+            this.flag=0;
+			return true;
+		}
     }
     @SuppressWarnings("unchecked")
     public void actualizar(){
-		this.flag=0;
+		
         System.out.println("Actualizando ruta");
         propio= new ArrayList();
         foraneo= new ArrayList();
