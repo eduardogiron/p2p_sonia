@@ -50,6 +50,8 @@ public class GironVectores implements Serializable {
 			this.tabla_externa= conexiones.tabla_propia;
 			this.ip_nodof= conexiones.ip_nodo;
 			this.actualizar();
+		}
+		if(this.flag==0){
             return false;
         }
         else
@@ -57,6 +59,7 @@ public class GironVectores implements Serializable {
     }
     @SuppressWarnings("unchecked")
     public void actualizar(){
+		this.flag=0;
         System.out.println("Actualizando ruta");
         propio= new ArrayList();
         foraneo= new ArrayList();
