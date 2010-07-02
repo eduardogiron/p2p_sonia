@@ -100,11 +100,14 @@ public class RodrigoSuperParDummy {
        		String nombre=System.getProperty("user.name");
       		String line =null;
                 FileTransferer transferer=new FileTransferer();
-      		
+      		String ip=null;
                  
       		if((line = clientInput_.readLine()) != null) {
         		File f = new File("." + File.separator + line);
         		System.out.print("Client "+nombre+ "/" +socket.getInetAddress().getHostName()+ " request for file " + line + "...");
+                        ip = socket.getInetAddress().toString();
+                        ip = ip.substring(1);
+                        System.out.println("d:ip llegante:"+ip);
                         if(archivos.isLocal(f.toString())) {
                                 PrintWriter srv = new PrintWriter(clientOutput_ , true);
           			srv.println("true");
@@ -118,7 +121,7 @@ public class RodrigoSuperParDummy {
                          //boolean found = lookupFurther(level-1, line, clientOutput_);
                         }*/
                         else{
-                            bellman.restart();
+                            bellman.restart(ip);
                             String nextIp=bellman.nextNode();
                             while(nextIp!=null){
                                  System.out.println(" file is not here, lookup further...");
