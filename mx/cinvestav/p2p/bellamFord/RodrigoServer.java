@@ -59,9 +59,12 @@ public class RodrigoServer implements Runnable{
                    ois = new ObjectInputStream(is);
                    vectors.tabla_propia = (Hashtable<String, ArrayList>) ois.readObject();
                    ip = socket.getInetAddress().toString();
+                   ip = ip.substring(1);
                    System.out.println("d:ip llegante:"+ip);
                    vectors.setIP(ip);
-                   ip=socket.getLocalSocketAddress().toString();
+                   ip = socket.getLocalSocketAddress().toString();
+                   ip = ip.substring(1);
+                   ip = ip.split(":")[0];
                    System.out.println("d:ip propia:"+ip);
                    giron.setIP(ip);
                    //vectors.setIp(ip);
