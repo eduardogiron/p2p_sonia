@@ -22,112 +22,84 @@ public class GironVectores implements Serializable {
     public GironVectores() {
 		// TODO Auto-generated constructor stub
 	}
-	@SuppressWarnings("unchecked")
+
     public void initTable(){
         String ip_nodo;
-        Enumeration key;
-        nodo= new ArrayList();
-        key=actual.keys();
-        ip_nodo=(String) key.nextElement();
-        nodo.add(ip_nodo);
-        nodo.add(((Integer)actual.get(ip_nodo)));
+        Enumeration<String> key;
         System.out.println("Inicialización de la tabla interna");
-        System.out.println("Añadido_actual ip "+ip_nodo+" next cost "+nodo);
-        tabla_propia.put(ip_nodo,nodo);
+
+        key=actual.keys();
         while(key.hasMoreElements())
         {
-			nodo=new ArrayList();
-			ip_nodo=(String) key.nextElement();
-			nodo.add(ip_nodo);
-			nodo.add(((Integer)actual.get(ip_nodo)));
-			tabla_propia.put(ip_nodo,nodo);
+        	nodo=new ArrayList();
+            ip_nodo=(String) key.nextElement();
+            nodo.add(ip_nodo);//ruta
+            nodo.add(actual.get(ip_nodo));//peso camino
+            tabla_propia.put(ip_nodo,nodo);
 			System.out.println("Añadido_actual ip "+ip_nodo+" next cost "+nodo);	
         }
     }
+    
     public boolean cambiovector(GironVectores conexiones)
     {
-        if ((tabla_propia.equals(conexiones.tabla_propia)==false)&& (this.flag==0)){
-			this.tabla_externa= conexiones.tabla_propia;
-			this.ip_nodof= conexiones.ip_nodo;
-			this.actualizar();
-		}
-		if(this.flag==0){
-            return false;
-        }
-        else{
-            this.flag=0;
-			return true;
-		}
-    }
-    @SuppressWarnings("unchecked")
-    public void actualizar(){
+		boolean fla = false;
+    	
+    	this.tabla_externa= conexiones.tabla_propia;
+		this.ip_nodof= conexiones.ip_nodo;
 		
-        System.out.println("Actualizando ruta");
-        propio= new ArrayList();
-        foraneo= new ArrayList();
-        aux= new ArrayList();
-        aux2= new ArrayList();
-        aux=aux2=null;
-        boolean flag=false;
-        Enumeration keys1,keys2;
-        String au,k1="",k2="";
-        keys2=tabla_externa.keys();
-        keys1=this.tabla_propia.keys();
-        aux= tabla_externa.get((String)ip_nodo);
-        System.out.println(aux+ip_nodo);
-        /*while(keys1.hasMoreElements()){
-		 k1=(String)keys1.nextElement();
-		 System.out.println("k1C k1 "+ tabla_propia.get(k1));
-		 }*/
-        while(keys2.hasMoreElements())
-        {
-            k2 =(String) keys2.nextElement();
-            System.out.println("k2 "+ tabla_externa.get(k2));
-            keys1=this.tabla_propia.keys();
-            flag=false;
-            while(keys1.hasMoreElements()){
-				k1=(String)keys1.nextElement();
-				if(k1.equals(k2))
+		Set<String> llaves = tabla_externa.keySet();//destinos
+		ArrayList<Object> tuplaExterna;
+		ArrayList<Object> tuplaLocal;
+		System.out.println("d:Comprobando tabla del vecino "+ ip_nodof);
+		String llaveForanea;
+		Integer caminoActual;
+		Integer caminoNuevo;
+
+		for (String siguiente : llaves) {
+			if(!siguiente.equals(ip_nodo))
+			{
+				tuplaExterna = (ArrayList<Object>) tabla_externa.get(siguiente);
+				tuplaLocal = (ArrayList) tabla_propia.get(siguiente);
+				if(tuplaLocal != null)//si se tiene localmente
 				{
-					System.out.println("Iguales k1 "+tabla_propia.get(k1)+" y K2 " + tabla_propia.get(k2)+" iniciando comparación... " ); 
-					flag=true;  
-					propio= tabla_propia.get(k1);
-					System.out.println(propio);
-					foraneo = tabla_externa.get(k2);
-					System.out.println(foraneo+k2);
-					System.out.println(aux+ip_nodo);
-					if (((Integer)propio.get(1))<(((Integer)aux.get(1))+((Integer)foraneo.get(1)))){
-						//System.out.println("va"+aux.get(0));
-						aux2= new ArrayList();
-						aux2.add((String)aux.get(0)); 
-						aux2.add((Integer)(((Integer)aux.get(1))+((Integer)foraneo.get(1)))); 
-						tabla_propia.put(k1,aux2);
-						this.flag=1;
-                    }
-					propio.clear();
-					foraneo.clear();
-					//aux.clear();
-					aux2.clear();
-                }
-				
-            }
-            if(flag==false)
-            {
-				if(k2.equals(this.ip_nodo)==false)
-				{
-					ArrayList a_ux= new ArrayList();
-					System.out.println("Existe un nuevo nodo:");
-					a_ux.add((String) this.ip_nodof);
-					a_ux.add((Integer)tabla_externa.get(k2).get(1));
-					tabla_propia.put(k2,a_ux); 
-					System.out.println("Valor añadido : "+k2+ " "+ a_ux);
-					this.flag=1;
+					System.out.println("d:Se compara un camino existente: " + siguiente);
+					caminoActual = (Integer) tuplaLocal.get(1);
+					caminoNuevo = (Integer) tuplaExterna.get(1) + actual.get(ip_nodof);
+					if(caminoNuevo < caminoActual)
+					{
+						fla = true;
+						System.out.println("d:Se encontro un camino mas corto, actualizando...");
+						tuplaLocal = new ArrayList<Object>();
+						tuplaLocal.add(ip_nodof);
+						tuplaLocal.add(caminoNuevo);
+						tabla_propia.remove(siguiente);
+						tabla_propia.put(siguiente, tuplaLocal);
+						System.out.println("d:destino\tcamino\tpeso camino");
+						System.out.println("d:["+siguiente+","+ip_nodof+","+caminoNuevo+"]");
+					}
 				}
-            }
-        }
-        
-        
+				else//no se tiene localmente
+				{
+					System.out.println("d:Se encontro un nuevo nodo" + siguiente + "-" + tuplaExterna.get(1).toString());
+					fla = true;
+					caminoNuevo = actual.get(ip_nodof) + (Integer)tuplaExterna.get(1);
+					tuplaLocal = new ArrayList<Object>();
+					tuplaLocal.add(ip_nodof);
+					tuplaLocal.add(caminoNuevo);
+					tabla_propia.put(siguiente, tuplaLocal);
+					System.out.println("d:destino\tcamino\tpeso camino");
+					System.out.println("d:["+siguiente+","+ip_nodof+","+caminoNuevo+"]");
+				}
+			}
+			else
+			{
+				System.out.println("d:encontro ip propia en tabla del vecino " + ip_nodof);
+			}
+		}
+
+		return fla;
     }
+    
     public void setIP(String ip)
     {
         this.ip_nodo=ip;

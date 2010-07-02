@@ -79,7 +79,6 @@ public class RodrigoServer implements Runnable{
                 }
                 if(giron.cambiovector(vectors)){
                        clienteBell.mandarVectorAVecinos(PORT);
-                       
                 }
            
             }
